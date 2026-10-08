@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>FLAPPENING — the meme flyer</title>
+<meta name="description" content="Pick a meme, pick a world, flap through it. A pixel flyer for PC and phone with 8 characters, 4 maps, coins, power-ups and a leaderboard.">
+<meta name="theme-color" content="#120a24">
+<meta property="og:title" content="FLAPPENING">
+<meta property="og:description" content="Pick a meme. Pick a world. Flap. Die. Repeat.">
+<meta property="og:image" content="assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="FLAPPENING">
+<meta name="twitter:description" content="Pick a meme. Pick a world. Flap. Die. Repeat.">
+<meta name="twitter:image" content="assets/og.png">
+<link rel="icon" href="assets/icon-192.png">
+<link rel="apple-touch-icon" href="assets/icon-192.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preload" href="fonts/press-start-2p-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+@font-face{font-family:'Press Start 2P';font-style:normal;font-weight:400;font-display:block;
+  src:url(fonts/press-start-2p-latin-400-normal.woff2) format('woff2'),url(fonts/press-start-2p-latin-400-normal.woff) format('woff');}
+:root{--u:2px;--ink:#1b1030;--gold:#ffd23f;--gold2:#e09a00;--pink:#ff4fa3;--cyan:#38e0ff}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#120a24;overflow:hidden;touch-action:manipulation;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent;overscroll-behavior:none}
+body{display:flex;align-items:center;justify-content:center;font-family:'Press Start 2P',monospace;color:#fff}
+#bgfx{position:fixed;inset:0;background:radial-gradient(ellipse at 50% 35%,#3a1d6e 0%,#1a0d36 45%,#0b0618 100%)}
+#bgfx:before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.035) 2px,transparent 2px),linear-gradient(90deg,rgba(255,255,255,.035) 2px,transparent 2px);background-size:32px 32px}
+#side{position:fixed;left:0;right:0;bottom:12px;text-align:center;font-size:10px;color:#8d7bb8;letter-spacing:1px;pointer-events:none}
+#app{position:relative;width:var(--aw);height:var(--ah);overflow:hidden;background:#000;cursor:pointer}
+@media (min-aspect-ratio:3/4){#app{box-shadow:0 0 0 4px var(--ink),0 0 0 8px #ffd23f,0 0 0 12px var(--ink),0 30px 80px rgba(0,0,0,.6)}}
+#game{width:100%;height:100%;display:block;image-rendering:pixelated;image-rendering:crisp-edges}
+.px{image-rendering:pixelated;image-rendering:crisp-edges}
+.screen{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;padding:calc(var(--u)*32) calc(var(--u)*8) calc(var(--u)*10);cursor:default}
+.screen.on{display:flex}
+.screen.dim{background:rgba(18,8,40,.78)}
+.btn{font-family:inherit;font-size:calc(var(--u)*8);line-height:1;padding:calc(var(--u)*7) calc(var(--u)*10) calc(var(--u)*8);background:var(--gold);color:var(--ink);border:0;cursor:pointer;
+  box-shadow:inset 0 calc(var(--u)*-3) 0 var(--gold2),inset 0 calc(var(--u)*2) 0 #fff3a8,0 0 0 calc(var(--u)*1.5) var(--ink),0 calc(var(--u)*3) 0 calc(var(--u)*1.5) var(--ink);
+  margin:calc(var(--u)*4) 0;min-width:calc(var(--u)*120);text-align:center;transition:transform .06s}
+.btn:active{transform:translateY(calc(var(--u)*2))}
+.btn.big{font-size:calc(var(--u)*12);padding:calc(var(--u)*9) calc(var(--u)*16) calc(var(--u)*10);min-width:calc(var(--u)*150)}
+.btn.pink{background:var(--pink);color:#fff;box-shadow:inset 0 calc(var(--u)*-3) 0 #c02a73,inset 0 calc(var(--u)*2) 0 #ff9ccd,0 0 0 calc(var(--u)*1.5) var(--ink),0 calc(var(--u)*3) 0 calc(var(--u)*1.5) var(--ink)}
+.btn.cyan{background:var(--cyan);box-shadow:inset 0 calc(var(--u)*-3) 0 #11a2c4,inset 0 calc(var(--u)*2) 0 #b8f6ff,0 0 0 calc(var(--u)*1.5) var(--ink),0 calc(var(--u)*3) 0 calc(var(--u)*1.5) var(--ink)}
+.btn.dark{background:#3b2a63;color:#fff;box-shadow:inset 0 calc(var(--u)*-3) 0 #261a44,inset 0 calc(var(--u)*2) 0 #5b4790,0 0 0 calc(var(--u)*1.5) var(--ink),0 calc(var(--u)*3) 0 calc(var(--u)*1.5) var(--ink)}
+.btn.sm{font-size:calc(var(--u)*6);padding:calc(var(--u)*5) calc(var(--u)*6) calc(var(--u)*6);min-width:0;margin:0}
+.row{display:flex;gap:calc(var(--u)*6);align-items:center;justify-content:center}
+.t8{font-size:calc(var(--u)*8)}.t6{font-size:calc(var(--u)*6)}.t5{font-size:calc(var(--u)*5)}.t12{font-size:calc(var(--u)*12)}.t16{font-size:calc(var(--u)*16)}
+.sh{text-shadow:calc(var(--u)*1) 0 0 var(--ink),calc(var(--u)*-1) 0 0 var(--ink),0 calc(var(--u)*1) 0 var(--ink),0 calc(var(--u)*-1) 0 var(--ink),0 calc(var(--u)*2) 0 var(--ink)}
+#logo{width:calc(var(--u)*230);margin-top:calc(var(--u)*6)}
+.spacer{flex:1}
+.coinpill{display:flex;align-items:center;gap:calc(var(--u)*3);background:rgba(27,16,48,.75);padding:calc(var(--u)*3) calc(var(--u)*5);box-shadow:0 0 0 calc(var(--u)*1) var(--ink)}
+.coinpill canvas{width:calc(var(--u)*9);height:calc(var(--u)*9)}
+#topbar{position:absolute;left:0;right:0;top:0;display:flex;justify-content:space-between;align-items:center;padding:calc(var(--u)*5);pointer-events:none;z-index:5}
+#topbar>*{pointer-events:auto}
+.ibtn{font-family:inherit;font-size:calc(var(--u)*7);width:calc(var(--u)*20);height:calc(var(--u)*20);background:rgba(27,16,48,.75);color:#fff;border:0;box-shadow:0 0 0 calc(var(--u)*1) var(--ink);cursor:pointer;padding:0}
+.hdr{width:100%;display:flex;align-items:center;justify-content:space-between;margin-bottom:calc(var(--u)*6)}
+.list{width:100%;flex:1;overflow-y:auto;overflow-x:hidden;padding:calc(var(--u)*2) calc(var(--u)*2) calc(var(--u)*10);-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.list::-webkit-scrollbar{display:none}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:calc(var(--u)*6)}
+.card{background:#24164a;box-shadow:0 0 0 calc(var(--u)*1.5) var(--ink),inset 0 calc(var(--u)*-3) 0 #1a1036;padding:calc(var(--u)*5);display:flex;flex-direction:column;align-items:center;gap:calc(var(--u)*4);cursor:pointer;position:relative}
+.card.sel{background:#3b2a7a;box-shadow:0 0 0 calc(var(--u)*1.5) var(--ink),0 0 0 calc(var(--u)*3) var(--gold),inset 0 calc(var(--u)*-3) 0 #2a1d5c}
+.card canvas{width:100%;background:rgba(0,0,0,.18)}
+.card .nm{font-size:calc(var(--u)*5.5);text-align:center;line-height:1.35;min-height:calc(var(--u)*15);display:flex;align-items:center}
+.card .tg{font-size:calc(var(--u)*4);color:#b9a8e6;text-align:center;line-height:1.5;min-height:calc(var(--u)*18)}
+.card .st{font-size:calc(var(--u)*5);padding:calc(var(--u)*3) calc(var(--u)*4);background:#120a24;color:var(--gold)}
+.card.locked canvas{filter:brightness(.25)}
+.mapcard{grid-column:span 2;flex-direction:row;align-items:stretch}
+.mapcard canvas{width:44%;flex:none}
+.mapcard .info{display:flex;flex-direction:column;gap:calc(var(--u)*4);justify-content:center;flex:1;padding-left:calc(var(--u)*2)}
+.mapcard .nm{justify-content:flex-start;min-height:0;font-size:calc(var(--u)*7)}
+.mapcard .tg{text-align:left;min-height:0}
+.tabs{display:flex;flex-wrap:wrap;gap:calc(var(--u)*3);justify-content:center;margin-bottom:calc(var(--u)*6)}
+.tab{font-family:inherit;font-size:calc(var(--u)*5);padding:calc(var(--u)*4) calc(var(--u)*5);background:#24164a;color:#cdbdf5;border:0;box-shadow:0 0 0 calc(var(--u)*1) var(--ink);cursor:pointer}
+.tab.on{background:var(--gold);color:var(--ink)}
+.lbrow{display:grid;grid-template-columns:calc(var(--u)*18) 1fr calc(var(--u)*30);align-items:center;font-size:calc(var(--u)*6);padding:calc(var(--u)*5) calc(var(--u)*4);background:#1d1240;margin-bottom:calc(var(--u)*3);box-shadow:0 0 0 calc(var(--u)*1) var(--ink)}
+.lbrow:nth-child(1){background:#4a3700;color:#ffe27a}.lbrow:nth-child(2){background:#3a3f4f;color:#e4e9f7}.lbrow:nth-child(3){background:#4a2614;color:#ffb98a}
+.lbrow .sc{text-align:right}
+.lbrow .ch{font-size:calc(var(--u)*4);color:#a796d6;display:block;margin-top:calc(var(--u)*2)}
+.empty{font-size:calc(var(--u)*5);color:#a796d6;text-align:center;line-height:1.8;margin-top:calc(var(--u)*20)}
+.panel{background:#24164a;box-shadow:0 0 0 calc(var(--u)*1.5) var(--ink),0 0 0 calc(var(--u)*3) #fff,0 0 0 calc(var(--u)*4.5) var(--ink),inset 0 calc(var(--u)*-4) 0 #1a1036;padding:calc(var(--u)*10) calc(var(--u)*10);width:calc(var(--u)*220);display:flex;flex-direction:column;align-items:center;gap:calc(var(--u)*6)}
+.deathtxt{font-size:calc(var(--u)*20);margin-top:calc(var(--u)*30);margin-bottom:calc(var(--u)*12);letter-spacing:calc(var(--u)*1)}
+.stats{display:grid;grid-template-columns:1fr auto;width:100%;gap:calc(var(--u)*6);align-items:center}
+.stats .k{font-size:calc(var(--u)*6);color:#b9a8e6}.stats .v{font-size:calc(var(--u)*10);text-align:right}
+.newbest{background:var(--pink);font-size:calc(var(--u)*5);padding:calc(var(--u)*3) calc(var(--u)*4);animation:blink .5s steps(2) infinite}
+@keyframes blink{50%{opacity:.35}}
+input.name{font-family:inherit;font-size:calc(var(--u)*7);width:100%;padding:calc(var(--u)*5);background:#120a24;color:#fff;border:0;box-shadow:0 0 0 calc(var(--u)*1.5) var(--ink),inset 0 0 0 calc(var(--u)*1) #6c55b0;text-align:center;text-transform:uppercase;outline:none;-webkit-user-select:text;user-select:text}
+.medal{width:calc(var(--u)*34);height:calc(var(--u)*34)}
+.hint{font-size:calc(var(--u)*5);color:#d9ccff;line-height:1.8;text-align:center}
+.toast{position:absolute;left:50%;top:calc(var(--u)*38);transform:translateX(-50%);background:var(--ink);color:var(--gold);font-size:calc(var(--u)*6);padding:calc(var(--u)*5) calc(var(--u)*7);z-index:9;display:none;white-space:nowrap}
+#menu-char{font-size:calc(var(--u)*7);margin-top:calc(var(--u)*4)}
+#menu-map{font-size:calc(var(--u)*5);color:#ffe8a3;margin-top:calc(var(--u)*5)}
+</style>
+</head>
+<body>
+<div id="bgfx"></div>
+<div id="side">SPACE / CLICK / TAP TO FLAP · P TO PAUSE</div>
+<div id="app">
+  <canvas id="game"></canvas>
+  <div id="topbar">
+    <div class="coinpill sh t6"><canvas class="px coinico" width="9" height="9"></canvas><span id="coins">0</span></div>
+    <div class="row" style="gap:calc(var(--u)*4)">
+      <button class="ibtn" id="btn-pause" title="Pause">II</button>
+      <button class="ibtn" id="btn-sound" title="Sound">♪</button>
+    </div>
+  </div>
+  <div class="toast" id="toast"></div>
+
+  <div class="screen on" id="scr-menu">
+    <canvas id="logo" class="px" width="200" height="72"></canvas>
+    <div class="spacer"></div>
+    <div id="menu-char" class="sh">WURST WING</div>
+    <div id="menu-map" class="sh">MAP: CLOUD NINE</div>
+    <div style="height:calc(var(--u)*10)"></div>
+    <button class="btn big" id="btn-play">PLAY</button>
+    <div class="row">
+      <button class="btn cyan" id="btn-chars" style="min-width:calc(var(--u)*80)">FLYERS</button>
+      <button class="btn cyan" id="btn-maps" style="min-width:calc(var(--u)*80)">MAPS</button>
+    </div>
+    <button class="btn pink" id="btn-lb">LEADERBOARD</button>
+    <div style="height:calc(var(--u)*16)"></div>
+  </div>
+
+  <div class="screen dim" id="scr-chars">
+    <div class="hdr"><button class="btn sm dark" data-back>&lt; BACK</button><div class="t8 sh">FLYERS</div><div style="width:calc(var(--u)*40)"></div></div>
+    <div class="list"><div class="grid" id="char-grid"></div></div>
+  </div>
+
+  <div class="screen dim" id="scr-maps">
+    <div class="hdr"><button class="btn sm dark" data-back>&lt; BACK</button><div class="t8 sh">MAPS</div><div style="width:calc(var(--u)*40)"></div></div>
+    <div class="list"><div class="grid" id="map-grid"></div></div>
+  </div>
+
+  <div class="screen dim" id="scr-lb">
+    <div class="hdr"><button class="btn sm dark" data-back>&lt; BACK</button><div class="t8 sh">TOP FLYERS</div><div style="width:calc(var(--u)*40)"></div></div>
+    <div class="tabs" id="lb-tabs"></div>
+    <div class="tabs" id="lb-scope"></div>
+    <div class="list" id="lb-list"></div>
+  </div>
+
+  <div class="screen" id="scr-over">
+    <div class="deathtxt sh" id="death-txt">WASTED</div>
+    <div class="panel">
+      <div class="row" style="width:100%;justify-content:space-between">
+        <canvas class="medal px" id="medal" width="34" height="34"></canvas>
+        <div class="stats" style="flex:1;margin-left:calc(var(--u)*8)">
+          <div class="k">SCORE</div><div class="v sh" id="o-score">0</div>
+          <div class="k">BEST</div><div class="v sh" id="o-best">0</div>
+          <div class="k">COINS</div><div class="v sh" id="o-coins" style="color:var(--gold)">+0</div>
+        </div>
+      </div>
+      <div class="newbest" id="o-new">NEW BEST!</div>
+      <div id="o-save" style="width:100%;display:flex;flex-direction:column;gap:calc(var(--u)*4);align-items:center">
+        <div class="hint">TOP 10! SIGN YOUR NAME</div>
+        <input class="name" id="o-name" maxlength="12" placeholder="YOUR NAME" autocomplete="off" spellcheck="false">
+        <button class="btn sm cyan" id="o-saveb" style="width:100%">SAVE SCORE</button>
+      </div>
+      <div class="row" style="width:100%">
+        <button class="btn" id="o-retry" style="flex:1;min-width:0">RETRY</button>
+        <button class="btn dark" id="o-menu" style="flex:1;min-width:0">MENU</button>
+      </div>
+      <button class="btn pink" id="o-share" style="width:100%;margin-top:0">SHARE ON X</button>
+    </div>
+  </div>
+
+  <div class="screen dim" id="scr-pause" style="justify-content:center">
+    <div class="t16 sh" style="margin-bottom:calc(var(--u)*20)">PAUSED</div>
+    <button class="btn big" id="p-resume">RESUME</button>
+    <button class="btn dark" id="p-menu">QUIT TO MENU</button>
+  </div>
+</div>
+<script src="js/config.js"></script>
+<script src="js/game.js"></script>
+</body>
+</html>

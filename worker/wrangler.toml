@@ -1,0 +1,7 @@
+name = "flappening-lb"
+main = "leaderboard.js"
+compatibility_date = "2025-01-01"
+
+[[kv_namespaces]]
+binding = "LB"
+id = "PASTE_YOUR_KV_NAMESPACE_ID_HERE"

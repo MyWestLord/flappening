@@ -1,0 +1,14 @@
+{
+  "name": "FLAPPENING",
+  "short_name": "FLAPPENING",
+  "description": "Pick a meme. Pick a world. Flap. Die. Repeat.",
+  "start_url": "./",
+  "display": "fullscreen",
+  "orientation": "portrait",
+  "background_color": "#120a24",
+  "theme_color": "#120a24",
+  "icons": [
+    { "src": "assets/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "assets/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
