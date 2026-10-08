@@ -4,7 +4,7 @@
 
 <p align="center">
   <b>Pick a meme. Pick a world. Flap. Die. Repeat.</b><br>
-  A pixel flyer for PC and phone — 11 meme flyers with perks, 4 worlds, 8 pipe styles, FEVER mode and a leaderboard.
+  A pixel flyer for PC and phone — 11 meme flyers with perks, 11 worlds, 8 pipe styles, FEVER mode and a leaderboard.
 </p>
 
 <p align="center">
@@ -12,8 +12,29 @@
 </p>
 
 <p align="center">
-  <img src="assets/og.png" width="760" alt="11 flyers, 4 worlds, 8 pipe styles">
+  <img src="assets/og.png" width="760" alt="FLAPPENING: meme flyers, worlds and pipe styles">
 </p>
+
+## Worlds
+
+<p align="center">
+  <img src="assets/worlds.png" width="820" alt="Claude Code, ChatGPT, Grok, X, GitHub, Binance, pump.fun and TikTok worlds">
+</p>
+
+Eight worlds are parodies of places the internet lives in. Each one has its own palette, obstacles, coins, ground UI, ambient effects, music and death screen.
+
+| World | Obstacles | Coins | Details | Death |
+|---|---|---|---|---|
+| **Claude Code** | tool-call panels (`Edit`, `Bash`, `Read`, `Grep`, `Task`) with live diffs | orange tokens | a scrolling session, `Flapping...` spinner, prompt box | `INTERRUPTED` |
+| **ChatGPT** | reply towers with code blocks and typing dots, model pills (`GPT`, `4o`, `o3`, `AGI`) | white tokens | a chat that scrolls behind you, the composer types `flap flap flap`, the famous disclaimer | `HALLUCINATED` |
+| **Grok** | black monoliths with a slash, `THINK` / `SEARCH` / `FUN MODE` chips | ring-and-slash discs | starfield, an event horizon with orbiting debris, shooting stars, "Grok is 88% sure this bird survives" | `SPAGHETTIFIED` (the screen stretches into the bird) |
+| **X / Twitter** | towers of posts with `POST` / `LIKE` / `RT` pills | blue checks | a live timeline, your flyer as the avatar, trending `#FLAPPENING`, hearts in the air, notification badge = score | `RATIOED` |
+| **GitHub** | branch towers of commits with diffstats, `MERGE` on top, `OPEN` below | stars | a scrolling contribution graph, repo tabs, checks, a star counter that is your score | `MERGE CONFLICT` (with conflict markers) |
+| **Binance** | an order book: red asks with `SELL` above, green bids with `BUY` below, you fly the spread | gold coins | candles, a live price line, ticker tape, PNL and a margin bar that fills up | `LIQUIDATED` |
+| **pump.fun** | stacks of giant pills | mini pills | token cards, a pump-and-dump curve, a bonding-curve bar you fill by scoring, live trades tape | `DEV SOLD` |
+| **TikTok** | neon video towers with a cyan/red split, `+` caps | hearts | pulsing logo, equalizer, the action rail with your flyer, likes that grow with your score | `FLOPPED` (RGB glitch) |
+
+The brand worlds are fan parodies. FLAPPENING is not affiliated with or endorsed by any of these companies, and every mark is drawn in code.
 
 ## Screens
 
@@ -43,12 +64,11 @@ Every flyer is hand-built pixel art with cel shading, a 6-frame flap, blinking e
 | <img src="assets/flyer-burger.png" width="96"> | **Burgerini Jetpackini** — a double cheeseburger with a jetpack | **EXTRA CHEESE**: FEVER lasts twice as long | 300 coins |
 | <img src="assets/flyer-brick.png" width="96"> | **Flying Brick** — physics said no | **HEAVY**: falls faster, +1 coin every pass | score 25 anywhere |
 
-## Worlds
+## Classic worlds
 
 | World | Obstacles | Ambient | Death |
 |---|---|---|---|
 | **Cloud Nine** | marble columns with ivy | sun rays, bird flocks, petals | stars spin around your head — `OUCH!` |
-| **Claude Code** | tool-call panels (`Edit`, `Bash`, `Read`, `Grep`, `Task`) with live diffs | a scrolling Claude Code session, welcome box, `Flapping...` spinner, prompt box, tokens instead of coins | glitch + `Error: bird collided with a pipe` / `Interrupted by user` — `INTERRUPTED` |
 | **Wasted City** | neon towers with glowing signs | synthwave sun, rain, searchlights, a police chopper at 4 stars | world turns grey — `WASTED` |
 | **To The Moon** | green `PUMP` / red `RUG` candles that move | twinkling stars, rockets, a live chart | red chart crashes across the screen — `RUGGED` |
 
@@ -71,7 +91,7 @@ Pick the obstacles in **PIPES** — they work on every world:
 
 ## Everything else
 
-- flyer and world **carousels** with live animated previews, stats and swipe support
+- flyer and world **carousels** with live animated previews, stats, swipe support and a quick-jump icon strip
 - animated logo, coin shop, a score-locked secret flyer
 - **leaderboard**: top 10 per world on every device + optional world board ([worker/](worker/README.md))
 - medals: bronze 10, silver 20, gold 40, diamond 80 — with a count-up and confetti on a new best

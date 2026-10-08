@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>FLAPPENING — the meme flyer</title>
-<meta name="description" content="Pick a meme, pick a world, flap through it. A pixel flyer for PC and phone with 11 meme flyers, 4 worlds, 8 pipe styles, FEVER mode, coins and a leaderboard.">
+<meta name="description" content="Pick a meme, pick a world, flap through it. A pixel flyer for PC and phone with 11 meme flyers, 11 worlds (Claude Code, ChatGPT, Grok, X, GitHub, Binance, pump.fun, TikTok and more), 8 pipe styles, FEVER mode, coins and a leaderboard.">
 <meta name="theme-color" content="#120a24">
 <meta property="og:title" content="FLAPPENING">
 <meta property="og:description" content="Pick a meme. Pick a world. Flap. Die. Repeat.">
@@ -155,12 +155,13 @@ input.name{font-family:inherit;font-size:calc(var(--u)*7);width:100%;padding:cal
   </div>
 
   <div class="screen dim" id="scr-maps">
-    <div class="hdr"><button class="btn sm dark" data-back>&lt; BACK</button><div class="t8 sh">WORLDS</div><div class="t5" id="m-count" style="width:calc(var(--u)*40);text-align:right;color:#b9a8e6">1/4</div></div>
+    <div class="hdr"><button class="btn sm dark" data-back>&lt; BACK</button><div class="t8 sh">WORLDS</div><div class="t5" id="m-count" style="width:calc(var(--u)*40);text-align:right;color:#b9a8e6">1/11</div></div>
     <div class="stagewrap"><button class="arrow" id="m-prev">&lt;</button><canvas id="m-stage" class="stage tall px" width="360" height="440"></canvas><button class="arrow" id="m-next">&gt;</button></div>
     <div class="ribbon sh" id="m-name">CLOUD NINE</div>
     <div class="ctag" id="m-desc"></div>
     <div class="perk" id="m-best"></div>
     <button class="btn big" id="m-act">FLY HERE</button>
+    <div class="thumbs" id="m-thumbs"></div>
   </div>
 
   <div class="screen dim" id="scr-pipes">
