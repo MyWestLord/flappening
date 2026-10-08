@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/logo.png" width="560" alt="FLAPPENING">
+  <img src="assets/logo-square.png" width="440" alt="FLAPPENING">
 </p>
 
 <p align="center">
