@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>FLAPPENING — the meme flyer</title>
-<meta name="description" content="Pick a meme, pick a world, flap through it. A pixel flyer for PC and phone with 11 meme flyers, 11 worlds (Claude Code, ChatGPT, Grok, X, GitHub, Binance, pump.fun, TikTok and more), 8 pipe styles, FEVER mode, coins and a leaderboard.">
+<meta name="description" content="Pick a meme, pick a world, flap through it. A pixel flyer for PC and phone with 16 meme flyers, 11 worlds (Claude Code, ChatGPT, Grok, X, GitHub, Binance, pump.fun, TikTok and more), 8 pipe styles, FEVER mode, coins and a leaderboard.">
 <meta name="theme-color" content="#120a24">
 <meta property="og:title" content="FLAPPENING">
 <meta property="og:description" content="Pick a meme. Pick a world. Flap. Die. Repeat.">
@@ -87,8 +87,12 @@ input.name{font-family:inherit;font-size:calc(var(--u)*7);width:100%;padding:cal
 .medal{width:calc(var(--u)*34);height:calc(var(--u)*34)}
 .hint{font-size:calc(var(--u)*5);color:#d9ccff;line-height:1.8;text-align:center}
 .toast{position:absolute;left:50%;top:calc(var(--u)*38);transform:translateX(-50%);background:var(--ink);color:var(--gold);font-size:calc(var(--u)*6);padding:calc(var(--u)*5) calc(var(--u)*7);z-index:9;display:none;white-space:nowrap}
-#menu-char{font-size:calc(var(--u)*7);margin-top:calc(var(--u)*4)}
-#menu-map{font-size:calc(var(--u)*4.5);line-height:1.6;text-align:center;padding:0 calc(var(--u)*8);color:#ffe8a3;margin-top:calc(var(--u)*5)}
+#menu-char{font-size:calc(var(--u)*7)}
+.infocard{background:rgba(18,8,40,.62);box-shadow:0 0 0 calc(var(--u)*1.5) var(--ink),0 0 0 calc(var(--u)*2.5) rgba(255,210,63,.55);padding:calc(var(--u)*6) calc(var(--u)*7);max-width:calc(var(--u)*246);text-align:center}
+.soc{min-width:0;padding:calc(var(--u)*5);display:flex;align-items:center;justify-content:center;text-decoration:none}
+.soc canvas{width:calc(var(--u)*13);height:calc(var(--u)*13);display:block}
+.credit{font-size:calc(var(--u)*4.5);color:#ffe8a3;text-decoration:none;margin:calc(var(--u)*3) 0 calc(var(--u)*6);letter-spacing:calc(var(--u)*.5)}
+#menu-map{font-size:calc(var(--u)*4.5);line-height:1.6;text-align:center;color:#ffe8a3;margin-top:calc(var(--u)*4)}
 
 #fx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:20}
 .stagewrap{position:relative;width:100%;display:flex;align-items:center;justify-content:center}
@@ -130,21 +134,25 @@ input.name{font-family:inherit;font-size:calc(var(--u)*7);width:100%;padding:cal
   <div class="screen on" id="scr-menu">
     <canvas id="logo" class="px" width="200" height="72"></canvas>
     <div class="spacer"></div>
-    <div id="menu-char" class="sh">WURST WING</div>
-    <div id="menu-map" class="sh">MAP: CLOUD NINE</div>
-    <div style="height:calc(var(--u)*10)"></div>
+    <div class="infocard"><div id="menu-char" class="sh">WURST WING</div>
+    <div id="menu-map" class="sh">MAP: CLOUD NINE</div></div>
+    <div style="height:calc(var(--u)*5)"></div>
     <button class="btn big" id="btn-play">PLAY</button>
     <div class="row">
       <button class="btn cyan" id="btn-chars" style="min-width:calc(var(--u)*72)">FLYERS</button>
       <button class="btn cyan" id="btn-maps" style="min-width:calc(var(--u)*72)">MAPS</button>
       <button class="btn cyan" id="btn-pipes" style="min-width:calc(var(--u)*72)">PIPES</button>
     </div>
-    <button class="btn pink" id="btn-lb">LEADERBOARD</button>
-    <div style="height:calc(var(--u)*16)"></div>
+    <div class="row">
+      <a class="btn dark soc" id="lnk-gh" href="https://github.com/MyWestLord/flappening" target="_blank" rel="noopener" title="GitHub repo" aria-label="GitHub repo"><canvas width="56" height="56"></canvas></a>
+      <button class="btn pink" id="btn-lb" style="min-width:calc(var(--u)*150)">LEADERBOARD</button>
+      <a class="btn dark soc" id="lnk-x" href="https://x.com/MyWestLord" target="_blank" rel="noopener" title="@MyWestLord on X" aria-label="@MyWestLord on X"><canvas width="56" height="56"></canvas></a>
+    </div>
+    <a class="credit sh" href="https://x.com/MyWestLord" target="_blank" rel="noopener">MADE BY @MYWESTLORD</a>
   </div>
 
   <div class="screen dim" id="scr-chars">
-    <div class="hdr"><button class="btn sm dark" data-back>&lt; BACK</button><div class="t8 sh">FLYERS</div><div class="t5" id="c-count" style="width:calc(var(--u)*40);text-align:right;color:#b9a8e6">1/10</div></div>
+    <div class="hdr"><button class="btn sm dark" data-back>&lt; BACK</button><div class="t8 sh">FLYERS</div><div class="t5" id="c-count" style="width:calc(var(--u)*40);text-align:right;color:#b9a8e6">1/16</div></div>
     <div class="stagewrap"><button class="arrow" id="c-prev">&lt;</button><canvas id="c-stage" class="stage px" width="480" height="360"></canvas><button class="arrow" id="c-next">&gt;</button></div>
     <div class="ribbon sh" id="c-name">WURST WING</div>
     <div class="ctag" id="c-tag"></div>

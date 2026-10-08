@@ -1222,6 +1222,19 @@
   }
 
   let now = 0, game = null, menuScroll = 0;
+  // main menu world tour: the background walks through every world with a crossfade
+  const tour = { i: 0, t: 0, fade: 0, snap: false, buf: null };
+  const viewMap = () => (!game && current === 'menu' ? MAPS[tour.i] || mapObj() : mapObj());
+  const MSP = 210, MGAP = 172;
+  const mcy = (k) => GY - 190 + Math.sin(k * 1.7) * 30 + Math.sin(k * 0.63) * 12;
+  function menuHeroY(sx) { const u = (sx + W / 2 - PW / 2) / MSP, k = Math.floor(u); return mcy(k) + (mcy(k + 1) - mcy(k)) * ease(u - k); }
+  function menuPillars(c, m, sx) {
+    const mixes = ['default', 'sausage', 'rocket', 'candy', 'cactus', 'pencil', 'gold'];
+    for (let k = Math.ceil((sx - PW - 10) / MSP); k * MSP - sx < W + 10; k++) {
+      const x = Math.round(k * MSP - sx), cy = Math.round(mcy(k)), p = { seed: (Math.imul(k + 11, 2654435761) >>> 9) % 1000000, mix: mixes[((k % 7) + 7) % 7], gap: MGAP, amp: 0 };
+      drawPillar(c, m, x, -4, cy - MGAP / 2, true, p); drawPillar(c, m, x, cy + MGAP / 2, GY, false, p);
+    }
+  }
   const parts = [], pops = [];
   let banner = null, trans = null, hudCoinBump = 0;
 
@@ -1234,6 +1247,7 @@
       rubber: ch.id === 'duck', lives: ch.id === 'cat' ? 1 : 0, scorePop: 0, glitch: 0, bombs: [], combo: 0, comboPop: 0, fever: 0, ghosts: [], ghostT: 0, bolt: 0, boltNext: 5 + Math.random() * 6, boltX: 0
     };
     parts.length = 0; pops.length = 0; banner = null;
+    if (ch.id === 'ceo') game.shield = 1;
   }
   const perk = (id) => game && charObj().id === id;
 
@@ -1281,6 +1295,11 @@
     if (id === 'gull') addP({ x: b.x - 8, y: b.y, vx: -40, vy: 10, g: 40, life: 1.2, max: 1.2, c: '#ffffff', kind: 'feather', rot: 0, vr: 3 });
     if (id === 'brick') for (let i = 0; i < 4; i++) addP({ x: b.x + (Math.random() - 0.5) * 20, y: b.y + 10, vx: (Math.random() - 0.5) * 50, vy: 30, g: 600, life: 0.6, max: 0.6, c: '#c2452d', s: 2 });
     if (id === 'cat') addP({ x: b.x + 10, y: b.y - 14, vx: 10, vy: -40, g: -10, life: 0.8, max: 0.8, c: '#ff6b9a', kind: 'heart' });
+    if (id === 'ceo') for (let i = 0; i < 2; i++) addP({ x: b.x - 8, y: b.y + 6, vx: -50 - Math.random() * 30, vy: -10 + Math.random() * 30, g: 120, life: 0.9, max: 0.9, c: i ? '#7dffb0' : '#3fb873', s: 3, kind: 'confetti', rot: Math.random() * 6, vr: 8 });
+    if (id === 'mogul') for (let i = 0; i < 4; i++) addP({ x: b.x - 14, y: b.y + 8, vx: -90 - Math.random() * 60, vy: (Math.random() - 0.5) * 40, life: 0.3, max: 0.3, c: i % 2 ? '#ffe14d' : '#ff5a1e', s: 2 });
+    if (id === 'dev') for (let i = 0; i < 3; i++) addP({ x: b.x - 6 + i * 5, y: b.y + 10, vx: -30, vy: 30 + Math.random() * 20, life: 0.5, max: 0.5, c: i % 2 ? '#7dffb0' : '#58c4ff', s: 1.5 });
+    if (id === 'gem') for (let i = 0; i < 3; i++) addP({ x: b.x + (Math.random() - 0.5) * 22, y: b.y + (Math.random() - 0.5) * 18, vx: -30, vy: -10, life: 0.5, max: 0.5, c: i % 2 ? '#ffffff' : '#9ff3ff', kind: 'spark' });
+    if (id === 'cup') for (let i = 0; i < 3; i++) addP({ x: b.x - 4 + i * 4, y: b.y + 12, vx: -20, vy: 20, g: 500, life: 0.6, max: 0.6, c: '#6b4424', s: 2 });
     if (id === 'pigeon') addP({ x: b.x - 14, y: b.y + 6, vx: -60, vy: -10, life: 0.6, max: 0.6, c: 'rgba(200,205,215,.8)', kind: 'smoke', r0: 3, r1: 8 });
   }
 
@@ -1317,7 +1336,7 @@
 
   function gainCoins(n, x, y) {
     const g = game;
-    const mult = (perk('pigeon') || perk('shark') ? 2 : 1) * (g.fever > 0 ? 2 : 1);
+    const mult = (perk('pigeon') || perk('shark') ? 2 : 1) * (g.fever > 0 ? (perk('gem') ? 3 : 2) : 1);
     g.coins += n * mult;
     addP({ kind: 'coinfly', x0: x, y0: y, x, y, vx: 0, vy: 0, life: 0.5, max: 0.5, c: mapObj().coin });
   }
@@ -1331,11 +1350,12 @@
     const isPerfect = Math.abs(b.y - cy) < pw, isClose = !isPerfect && edge < 15;
     if (isPerfect || isClose) { g.combo++; g.comboPop = 1; } else g.combo = 0;
     if ((g.combo >= 3 || g.score % 25 === 0) && g.fever <= 0) startFever();
-    if (isPerfect) { gainCoins(1, b.x, b.y); pop(b.x, b.y - 24, 'PERFECT', '#7dffb0'); ring(b.x, b.y, '#7dffb0', 8, 30, 0.35); }
-    else if (edge < 15) { g.slow = 0.32; SFX.close(); pop(b.x + 6, b.y - 24, 'CLOSE!', '#ff4fa3', 16); ring(b.x, b.y, '#ff4fa3', 6, 36, 0.4); }
+    if (isPerfect) { gainCoins(perk('dev') ? 2 : 1, b.x, b.y); pop(b.x, b.y - 24, 'PERFECT', '#7dffb0'); ring(b.x, b.y, '#7dffb0', 8, 30, 0.35); }
+    else if (edge < 15) { g.slow = 0.32; SFX.close(); if (perk('cup')) { gainCoins(2, b.x, b.y); pop(b.x - 8, b.y + 18, 'OVERTIME +2$', '#d9b38c'); } pop(b.x + 6, b.y - 24, 'CLOSE!', '#ff4fa3', 16); ring(b.x, b.y, '#ff4fa3', 6, 36, 0.4); }
     else if (g.score % 5 === 0 || Math.random() < 0.3) pop(b.x + 10, b.y - 22, m.words[(Math.random() * m.words.length) | 0], '#ffffff');
     if (perk('wurst') && g.score % 5 === 0) { gainCoins(1, b.x, b.y); pop(b.x - 10, b.y + 18, 'SNACK +1$', '#ffd43b'); }
     if (perk('brick')) gainCoins(1, b.x, b.y);
+    if (perk('mogul') && g.score % 10 === 0) { gainCoins(5, b.x, b.y); pop(b.x - 6, b.y + 20, 'TO MARS +5$', '#ff8a8a'); }
     if (perk('pigeon') && g.score % 10 === 0) g.bombs.push({ x: b.x, y: b.y + 10, vy: 0 });
     if (g.score % 10 === 0) {
       banner = { txt: g.score + '!', sub: ['ON FIRE', 'UNSTOPPABLE', 'MENACE', 'LEGEND', 'GOATED', 'NO WAY'][Math.min(5, g.score / 10 - 1)], t: 0 };
@@ -1345,7 +1365,7 @@
 
   function startFever() {
     const g = game; g.fever = perk('burger') ? 12 : 6; g.combo = 0;
-    banner = { txt: 'FEVER!', sub: 'COINS X2  ·  ' + g.fever + ' SECONDS', t: 0 };
+    banner = { txt: 'FEVER!', sub: 'COINS X' + (perk('gem') ? 3 : 2) + '  ·  ' + g.fever + ' SECONDS', t: 0 };
     confetti(60); g.flash = 0.1; SFX.fanfare(); SFX.power();
   }
 
@@ -1366,7 +1386,12 @@
     hudCoinBump = Math.max(0, hudCoinBump - dt * 4);
     if (trans) { trans.t += dtReal; if (!trans.fired && trans.t >= trans.dur / 2) { trans.fired = true; trans.mid(); } if (trans.t >= trans.dur) trans = null; }
     ambientUpdate(dt);
-    if (!game) { menuScroll += 60 * dt; return; }
+    tour.fade = Math.max(0, tour.fade - dtReal * 1.5);
+    if (!game) {
+      menuScroll += 60 * dt;
+      if (current === 'menu' && !trans) { tour.t += dt; if (tour.t > 5.2) { tour.t = 0; tour.i = (tour.i + 1) % MAPS.length; tour.fade = 1; tour.snap = true; amb.length = 0; } }
+      return;
+    }
     const g = game, b = g.bird, m = mapObj(), ch = charObj();
     g.t += dt; g.fever = Math.max(0, g.fever - dt); g.comboPop = Math.max(0, g.comboPop - dt * 3); g.bolt = Math.max(0, g.bolt - dtReal);
     g.ghostT += dt; if (g.ghostT > 0.035) { g.ghostT = 0; g.ghosts.push({ x: b.x, y: b.y, rot: b.rot, f: b.f }); if (g.ghosts.length > 8) g.ghosts.shift(); }
@@ -1446,7 +1471,7 @@
   // ---------------------------------------------------------------- ambient per map
   const amb = [];
   function ambientUpdate(dt) {
-    const m = mapObj();
+    const m = viewMap();
     for (let i = amb.length - 1; i >= 0; i--) { const a = amb[i]; a.x += a.vx * dt; a.y += a.vy * dt; a.t += dt; if (a.x < -60 || a.x > W + 60 || a.y > H + 20 || a.t > a.life) amb.splice(i, 1); }
     const r = Math.random();
     if (m.id === 'cloud') {
@@ -1548,8 +1573,9 @@
   }
 
   function render() {
-    const m = mapObj(), L = layers[m.id];
+    const m = viewMap(), L = layers[m.id];
     const g = game;
+    if (tour.snap) { tour.snap = false; if (!tour.buf || tour.buf.width !== cvs.width || tour.buf.height !== cvs.height) tour.buf = mk(cvs.width, cvs.height); const tg = tour.buf.getContext('2d'); tg.setTransform(1, 0, 0, 1, 0, 0); tg.drawImage(cvs, 0, 0); }
     const sx = g ? g.scroll : menuScroll;
     ctx.setTransform(SC, 0, 0, SC, 0, 0); ctx.imageSmoothingEnabled = false;
     ctx.save();
@@ -1564,7 +1590,7 @@
       }
       for (const it of g.items) { if (it.kind === 'coin') drawCoin(ctx, it.x, it.y, m.coin, now + it.p.seed % 7); else drawPower(ctx, it.x, it.y, it.kind, now); }
       for (const bm of g.bombs) { E(ctx, bm.x, bm.y, 3.5, 2.2, '#2b2b2b'); R(ctx, bm.x - 5, bm.y - 1, 2, 2, '#2b2b2b'); }
-    }
+    } else if (current === 'menu') menuPillars(ctx, m, sx);
     m.ground(ctx, L, sx);
     drawParts(ctx);
     const ch = charObj();
@@ -1597,9 +1623,14 @@
         const px = -30 + tt / per * (W + 60), py = 110 + i * 64 + Math.sin(now * 2 + i) * 10;
         drawSprite(ctx, pc.frames[((now * 11 + i) | 0) % 6], px, py, Math.sin(now * 2 + i) * 0.15);
       }
-      const bob = Math.sin(now * 3) * 6;
-      glow(ctx, W / 2, GY - 182 + bob, 70, '#ffffff', 0.18);
-      drawSprite(ctx, ch.frames[((now * 11) | 0) % 6], W / 2, GY - 190 + bob, 0, 2);
+      const onMenu = current === 'menu', hy = onMenu ? menuHeroY(sx) : GY - 190, bob = Math.sin(now * 3) * (onMenu ? 3 : 6);
+      glow(ctx, W / 2, hy + 8 + bob, 70, '#ffffff', 0.18);
+      drawSprite(ctx, ch.frames[((now * 11) | 0) % 6], W / 2, hy + bob, onMenu ? clamp((menuHeroY(sx + 8) - menuHeroY(sx - 8)) / 16 * 0.9, -0.35, 0.35) : 0, 2);
+      if (onMenu) {
+        outlinedText(ctx, 'WORLD ' + (tour.i + 1) + '/' + MAPS.length + ': ' + m.name.toUpperCase(), W / 2, 127, 8, '#ffffff');
+        const n = MAPS.length, x0 = W / 2 - n * 4 + 0.5;
+        for (let i = 0; i < n; i++) { R(ctx, x0 + i * 8 - 1, 139.5, 7, 4, OUTL); R(ctx, x0 + i * 8, 140.5, 5, 2, i < tour.i ? '#ffd23f' : '#6c55b0'); if (i === tour.i) R(ctx, x0 + i * 8, 140.5, 5 * clamp(tour.t / 5.2, 0, 1), 2, '#ffd23f'); }
+      }
     }
     for (const p of pops) {
       const a = clamp(p.life * 2, 0, 1), sc = p.life > 0.85 ? back((1 - p.life) / 0.15) : 1;
@@ -1626,6 +1657,7 @@
     if (g) drawHUD(g, m);
     if (g && g.state === 'dead') deathFX(g, m);
     if (g && g.flash > 0) { ctx.fillStyle = 'rgba(255,255,255,' + clamp(g.flash / 0.2, 0, 1) * 0.55 + ')'; ctx.fillRect(0, 0, W, H); }
+    if (tour.fade > 0 && tour.buf && !g) { ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = ease(tour.fade); ctx.drawImage(tour.buf, 0, 0); ctx.restore(); }
     drawTrans();
   }
   function starTiny(c, x, y) { R(c, x - 2, y - 0.5, 4, 1, '#ffe066'); R(c, x - 0.5, y - 2, 1, 4, '#ffe066'); R(c, x - 0.5, y - 0.5, 1, 1, '#ffffff'); }
@@ -1765,6 +1797,7 @@
   function toast(msg) { const t = $('#toast'); t.textContent = msg; t.style.display = 'block'; clearTimeout(toast.h); toast.h = setTimeout(() => (t.style.display = 'none'), 1600); }
   function updateCoins() { $('#coins').textContent = S.coins; $('#c-coins') && ($('#c-coins').textContent = S.coins); }
   function refreshMenu() {
+    tour.i = Math.max(0, MAPS.findIndex((m) => m.id === S.map)); tour.t = 0; tour.fade = 0; amb.length = 0;
     $('#menu-char').textContent = charObj().name.toUpperCase();
     $('#menu-map').textContent = 'MAP: ' + mapObj().name.toUpperCase() + '  ·  PIPES: ' + skinObj().name.toUpperCase() + '  ·  BEST: ' + (S.best[S.map] || 0);
   }
@@ -2074,6 +2107,7 @@
     try { await document.fonts.load('16px "Press Start 2P"'); await document.fonts.load('8px "Press Start 2P"'); } catch (e) { /* fallback font */ }
     layout(); buildLayers();
     document.querySelectorAll('.coinico').forEach(coinIcon);
+    mkOcto($('#lnk-gh canvas').getContext('2d'), 28, 28, 25, '#ffffff', '#3b2a63'); mkX($('#lnk-x canvas').getContext('2d'), 28, 28, 19, '#ffffff', '#3b2a63');
     updateCoins(); setSound(S.sound); refreshMenu();
     $('#btn-pause').style.visibility = 'hidden';
     window.addEventListener('resize', layout);

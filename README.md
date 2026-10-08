@@ -4,7 +4,7 @@
 
 <p align="center">
   <b>Pick a meme. Pick a world. Flap. Die. Repeat.</b><br>
-  A pixel flyer for PC and phone — 11 meme flyers with perks, 11 worlds, 8 pipe styles, FEVER mode and a leaderboard.
+  A pixel flyer for PC and phone — 16 meme flyers with perks, 11 worlds, 8 pipe styles, FEVER mode and a leaderboard.
 </p>
 
 <p align="center">
@@ -55,6 +55,11 @@ Every flyer is hand-built pixel art with cel shading, a 6-frame flap, blinking e
 | <img src="assets/flyer-wurst.png" width="96"> | **Wurst Wing** — a bird on a sausage, goggles and a scarf | **SNACK**: +1 coin every 5 points | free |
 | <img src="assets/flyer-moon.png" width="96"> | **Moon Boi** — a bird in a space helmet riding a rocket | **BOOST**: stronger flaps, flame trail | free |
 | <img src="assets/flyer-duck.png" width="96"> | **Debug Duck** — rubber duck with a headset and glasses | **RUBBER**: bounces off the ground once | free |
+| <img src="assets/flyer-ceo.png" width="96"> | **Founder Mode** — navy suit, red tie, big glasses | **SEED ROUND**: starts every run with a shield | free |
+| <img src="assets/flyer-mogul.png" width="96"> | **Mars Mogul** — black tee, a tiny red car, plans for another planet | **TO MARS**: +5 coins every 10 pipes | free |
+| <img src="assets/flyer-dev.png" width="96"> | **Hoodie Dev** — hood up, laptop out, ships at 3 a.m. | **SHIP IT**: PERFECT passes pay double | free |
+| <img src="assets/flyer-gem.png" width="96"> | **Diamond Hands** — a diamond in shades with wings | **HODL**: coins x3 during FEVER | free |
+| <img src="assets/flyer-cup.png" width="96"> | **Coffee Intern** — a paper cup that has not slept since v1 | **OVERTIME**: every CLOSE! call pays +2 coins | free |
 | <img src="assets/flyer-pigeon.png" width="96"> | **Pigeonardo Bombardini** — half pigeon, half bomber | **WAR CHEST**: coins worth x2, drops a bomb every 10 | 30 coins |
 | <img src="assets/flyer-capy.png" width="96"> | **Capy Copter** — capybara, yuzu, propeller hat | **CHILL**: world moves 10% slower | 60 coins |
 | <img src="assets/flyer-toast.png" width="96"> | **Toastito** — holy toast with a halo | **BLESSED**: wider PERFECT zone | 100 coins |
@@ -92,7 +97,8 @@ Pick the obstacles in **PIPES** — they work on every world:
 ## Everything else
 
 - flyer and world **carousels** with live animated previews, stats, swipe support and a quick-jump icon strip
-- animated logo, coin shop, a score-locked secret flyer
+- **main menu world tour**: the background walks through all 11 worlds with a crossfade while your flyer threads the pipes
+- animated logo, coin shop, a score-locked secret flyer, GitHub and X links in the menu
 - **leaderboard**: top 10 per world on every device + optional world board ([worker/](worker/README.md))
 - medals: bronze 10, silver 20, gold 40, diamond 80 — with a count-up and confetti on a new best
 - **Share on X** from the game-over screen, chiptune music and SFX generated live, mute button
