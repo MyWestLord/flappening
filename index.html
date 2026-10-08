@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>FLAPPENING — the meme flyer</title>
-<meta name="description" content="Pick a meme, pick a world, flap through it. A pixel flyer for PC and phone with 8 characters, 4 maps, coins, power-ups and a leaderboard.">
+<meta name="description" content="Pick a meme, pick a world, flap through it. A pixel flyer for PC and phone with 10 meme flyers, 4 worlds, perks, coins, power-ups and a leaderboard.">
 <meta name="theme-color" content="#120a24">
 <meta property="og:title" content="FLAPPENING">
 <meta property="og:description" content="Pick a meme. Pick a world. Flap. Die. Repeat.">
@@ -89,6 +89,27 @@ input.name{font-family:inherit;font-size:calc(var(--u)*7);width:100%;padding:cal
 .toast{position:absolute;left:50%;top:calc(var(--u)*38);transform:translateX(-50%);background:var(--ink);color:var(--gold);font-size:calc(var(--u)*6);padding:calc(var(--u)*5) calc(var(--u)*7);z-index:9;display:none;white-space:nowrap}
 #menu-char{font-size:calc(var(--u)*7);margin-top:calc(var(--u)*4)}
 #menu-map{font-size:calc(var(--u)*5);color:#ffe8a3;margin-top:calc(var(--u)*5)}
+
+#fx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:20}
+.stagewrap{position:relative;width:100%;display:flex;align-items:center;justify-content:center}
+.stage{width:calc(var(--u)*220);height:calc(var(--u)*165);box-shadow:0 0 0 calc(var(--u)*1.5) var(--ink),0 0 0 calc(var(--u)*3) #ffd23f,0 0 0 calc(var(--u)*4.5) var(--ink);touch-action:pan-y}
+.stage.tall{width:calc(var(--u)*180);height:calc(var(--u)*220)}
+.arrow{font-family:inherit;font-size:calc(var(--u)*10);width:calc(var(--u)*20);flex:none;height:calc(var(--u)*34);border:0;background:var(--gold);color:var(--ink);cursor:pointer;margin:0 calc(var(--u)*4);box-shadow:inset 0 calc(var(--u)*-3) 0 var(--gold2),0 0 0 calc(var(--u)*1.5) var(--ink)}
+.arrow:active{transform:translateY(calc(var(--u)*2))}
+.ribbon{margin-top:calc(var(--u)*10);background:#ff4fa3;padding:calc(var(--u)*5) calc(var(--u)*12);font-size:calc(var(--u)*8);box-shadow:0 0 0 calc(var(--u)*1.5) var(--ink),calc(var(--u)*4) calc(var(--u)*4) 0 0 var(--ink);text-align:center;max-width:100%}
+.ctag{font-size:calc(var(--u)*5);color:#d9ccff;text-align:center;line-height:1.7;margin-top:calc(var(--u)*7);min-height:calc(var(--u)*17);padding:0 calc(var(--u)*6)}
+.perk{font-size:calc(var(--u)*5);color:#7dffb0;margin-top:calc(var(--u)*4);text-align:center;background:rgba(0,0,0,.3);padding:calc(var(--u)*4) calc(var(--u)*6);box-shadow:0 0 0 calc(var(--u)*1) #2f6b4f}
+.statsbars{display:flex;gap:calc(var(--u)*7);margin:calc(var(--u)*7) 0 calc(var(--u)*2)}
+.sb{display:flex;flex-direction:column;align-items:center;gap:calc(var(--u)*3);font-size:calc(var(--u)*4);color:#b9a8e6}
+.sb i{display:flex;gap:calc(var(--u)*1)}
+.sb b,.sb u{display:block;width:calc(var(--u)*6);height:calc(var(--u)*6);background:#ffd23f;box-shadow:0 0 0 calc(var(--u)*.7) var(--ink)}
+.sb u{background:#3b2a63}
+.thumbs{display:flex;gap:calc(var(--u)*3);overflow-x:auto;max-width:100%;padding:calc(var(--u)*4);margin-top:calc(var(--u)*2);scrollbar-width:none}
+.thumbs::-webkit-scrollbar{display:none}
+.th{width:calc(var(--u)*30);height:calc(var(--u)*24);flex:none;background:#24164a;box-shadow:0 0 0 calc(var(--u)*1) var(--ink);cursor:pointer}
+.th.on{background:#5a3fb0;box-shadow:0 0 0 calc(var(--u)*1) var(--ink),0 0 0 calc(var(--u)*2.5) var(--gold)}
+.lbrow{grid-template-columns:calc(var(--u)*14) calc(var(--u)*26) 1fr calc(var(--u)*26) !important;gap:calc(var(--u)*3)}
+.lbrow canvas{width:calc(var(--u)*25);height:calc(var(--u)*20)}
 </style>
 </head>
 <body>
@@ -96,6 +117,7 @@ input.name{font-family:inherit;font-size:calc(var(--u)*7);width:100%;padding:cal
 <div id="side">SPACE / CLICK / TAP TO FLAP · P TO PAUSE</div>
 <div id="app">
   <canvas id="game"></canvas>
+  <canvas id="fx"></canvas>
   <div id="topbar">
     <div class="coinpill sh t6"><canvas class="px coinico" width="9" height="9"></canvas><span id="coins">0</span></div>
     <div class="row" style="gap:calc(var(--u)*4)">
@@ -121,13 +143,23 @@ input.name{font-family:inherit;font-size:calc(var(--u)*7);width:100%;padding:cal
   </div>
 
   <div class="screen dim" id="scr-chars">
-    <div class="hdr"><button class="btn sm dark" data-back>&lt; BACK</button><div class="t8 sh">FLYERS</div><div style="width:calc(var(--u)*40)"></div></div>
-    <div class="list"><div class="grid" id="char-grid"></div></div>
+    <div class="hdr"><button class="btn sm dark" data-back>&lt; BACK</button><div class="t8 sh">FLYERS</div><div class="t5" id="c-count" style="width:calc(var(--u)*40);text-align:right;color:#b9a8e6">1/10</div></div>
+    <div class="stagewrap"><button class="arrow" id="c-prev">&lt;</button><canvas id="c-stage" class="stage px" width="480" height="360"></canvas><button class="arrow" id="c-next">&gt;</button></div>
+    <div class="ribbon sh" id="c-name">WURST WING</div>
+    <div class="ctag" id="c-tag"></div>
+    <div class="perk" id="c-perk"></div>
+    <div class="statsbars" id="c-stats"></div>
+    <button class="btn big" id="c-act">SELECT</button>
+    <div class="thumbs" id="c-thumbs"></div>
   </div>
 
   <div class="screen dim" id="scr-maps">
-    <div class="hdr"><button class="btn sm dark" data-back>&lt; BACK</button><div class="t8 sh">MAPS</div><div style="width:calc(var(--u)*40)"></div></div>
-    <div class="list"><div class="grid" id="map-grid"></div></div>
+    <div class="hdr"><button class="btn sm dark" data-back>&lt; BACK</button><div class="t8 sh">WORLDS</div><div class="t5" id="m-count" style="width:calc(var(--u)*40);text-align:right;color:#b9a8e6">1/4</div></div>
+    <div class="stagewrap"><button class="arrow" id="m-prev">&lt;</button><canvas id="m-stage" class="stage tall px" width="360" height="440"></canvas><button class="arrow" id="m-next">&gt;</button></div>
+    <div class="ribbon sh" id="m-name">CLOUD NINE</div>
+    <div class="ctag" id="m-desc"></div>
+    <div class="perk" id="m-best"></div>
+    <button class="btn big" id="m-act">FLY HERE</button>
   </div>
 
   <div class="screen dim" id="scr-lb">
@@ -169,6 +201,7 @@ input.name{font-family:inherit;font-size:calc(var(--u)*7);width:100%;padding:cal
   </div>
 </div>
 <script src="js/config.js"></script>
+<script src="js/flyers.js"></script>
 <script src="js/game.js"></script>
 </body>
 </html>
