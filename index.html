@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>FLAPPENING — the meme flyer</title>
-<meta name="description" content="Pick a meme, pick a world, flap through it. A pixel flyer for PC and phone with 10 meme flyers, 4 worlds, perks, coins, power-ups and a leaderboard.">
+<meta name="description" content="Pick a meme, pick a world, flap through it. A pixel flyer for PC and phone with 11 meme flyers, 4 worlds, 8 pipe styles, FEVER mode, coins and a leaderboard.">
 <meta name="theme-color" content="#120a24">
 <meta property="og:title" content="FLAPPENING">
 <meta property="og:description" content="Pick a meme. Pick a world. Flap. Die. Repeat.">
@@ -88,12 +88,12 @@ input.name{font-family:inherit;font-size:calc(var(--u)*7);width:100%;padding:cal
 .hint{font-size:calc(var(--u)*5);color:#d9ccff;line-height:1.8;text-align:center}
 .toast{position:absolute;left:50%;top:calc(var(--u)*38);transform:translateX(-50%);background:var(--ink);color:var(--gold);font-size:calc(var(--u)*6);padding:calc(var(--u)*5) calc(var(--u)*7);z-index:9;display:none;white-space:nowrap}
 #menu-char{font-size:calc(var(--u)*7);margin-top:calc(var(--u)*4)}
-#menu-map{font-size:calc(var(--u)*5);color:#ffe8a3;margin-top:calc(var(--u)*5)}
+#menu-map{font-size:calc(var(--u)*4.5);line-height:1.6;text-align:center;padding:0 calc(var(--u)*8);color:#ffe8a3;margin-top:calc(var(--u)*5)}
 
 #fx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:20}
 .stagewrap{position:relative;width:100%;display:flex;align-items:center;justify-content:center}
-.stage{width:calc(var(--u)*220);height:calc(var(--u)*165);box-shadow:0 0 0 calc(var(--u)*1.5) var(--ink),0 0 0 calc(var(--u)*3) #ffd23f,0 0 0 calc(var(--u)*4.5) var(--ink);touch-action:pan-y}
-.stage.tall{width:calc(var(--u)*180);height:calc(var(--u)*220)}
+.stage{width:calc(var(--u)*226);height:calc(var(--u)*170);box-shadow:0 0 0 calc(var(--u)*1.5) var(--ink),0 0 0 calc(var(--u)*3) #ffd23f,0 0 0 calc(var(--u)*4.5) var(--ink);touch-action:pan-y}
+.stage.tall{width:calc(var(--u)*196);height:calc(var(--u)*240)}
 .arrow{font-family:inherit;font-size:calc(var(--u)*10);width:calc(var(--u)*20);flex:none;height:calc(var(--u)*34);border:0;background:var(--gold);color:var(--ink);cursor:pointer;margin:0 calc(var(--u)*4);box-shadow:inset 0 calc(var(--u)*-3) 0 var(--gold2),0 0 0 calc(var(--u)*1.5) var(--ink)}
 .arrow:active{transform:translateY(calc(var(--u)*2))}
 .ribbon{margin-top:calc(var(--u)*10);background:#ff4fa3;padding:calc(var(--u)*5) calc(var(--u)*12);font-size:calc(var(--u)*8);box-shadow:0 0 0 calc(var(--u)*1.5) var(--ink),calc(var(--u)*4) calc(var(--u)*4) 0 0 var(--ink);text-align:center;max-width:100%}
@@ -135,8 +135,9 @@ input.name{font-family:inherit;font-size:calc(var(--u)*7);width:100%;padding:cal
     <div style="height:calc(var(--u)*10)"></div>
     <button class="btn big" id="btn-play">PLAY</button>
     <div class="row">
-      <button class="btn cyan" id="btn-chars" style="min-width:calc(var(--u)*80)">FLYERS</button>
-      <button class="btn cyan" id="btn-maps" style="min-width:calc(var(--u)*80)">MAPS</button>
+      <button class="btn cyan" id="btn-chars" style="min-width:calc(var(--u)*72)">FLYERS</button>
+      <button class="btn cyan" id="btn-maps" style="min-width:calc(var(--u)*72)">MAPS</button>
+      <button class="btn cyan" id="btn-pipes" style="min-width:calc(var(--u)*72)">PIPES</button>
     </div>
     <button class="btn pink" id="btn-lb">LEADERBOARD</button>
     <div style="height:calc(var(--u)*16)"></div>
@@ -160,6 +161,15 @@ input.name{font-family:inherit;font-size:calc(var(--u)*7);width:100%;padding:cal
     <div class="ctag" id="m-desc"></div>
     <div class="perk" id="m-best"></div>
     <button class="btn big" id="m-act">FLY HERE</button>
+  </div>
+
+  <div class="screen dim" id="scr-pipes">
+    <div class="hdr"><button class="btn sm dark" data-back>&lt; BACK</button><div class="t8 sh">PIPES</div><div class="t5" id="p-count" style="width:calc(var(--u)*40);text-align:right;color:#b9a8e6">1/8</div></div>
+    <div class="stagewrap"><button class="arrow" id="p-prev">&lt;</button><canvas id="p-stage" class="stage tall px" width="360" height="440"></canvas><button class="arrow" id="p-next">&gt;</button></div>
+    <div class="ribbon sh" id="p-name">WORLD DEFAULT</div>
+    <div class="ctag" id="p-desc"></div>
+    <div class="perk" id="p-world"></div>
+    <button class="btn big" id="p-act">USE THESE</button>
   </div>
 
   <div class="screen dim" id="scr-lb">

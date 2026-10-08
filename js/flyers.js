@@ -266,6 +266,25 @@
         const a = [-0.5, -0.3, 0, 0.3, 0.15, -0.2][f];
         g.save(); g.translate(26, 21); g.rotate(a); g.strokeStyle = '#1b1030'; g.lineWidth = 0.8; g.beginPath(); g.moveTo(-3, 0); g.quadraticCurveTo(2, -5, 6, -3); g.quadraticCurveTo(3, -1.6, 5, 0.6); g.quadraticCurveTo(1.6, 0, 2.6, 2.2); g.quadraticCurveTo(-1, 1.6, -3, 0); g.stroke(); g.restore();
         L(g, [10.6, 24, 13.2, 23.4, 15, 25], '#8b6232', 0.7);
+      } },
+    { id: 'burger', name: 'Burgerini Jetpackini', tag: 'A double cheeseburger with a jetpack. Peak brainrot cuisine.', price: 300, puff: '#ffcc2e', trail: 'pack', sfx: 'pop',
+      perk: 'EXTRA CHEESE: FEVER lasts twice as long', stats: [4, 4, 5],
+      draw(g, f, b) {
+        const fl = [5, 8, 6, 9, 6, 7][f];
+        rbox(g, 6.5, 12, 6, 13, 2, '#b8c2d6'); rbox(g, 9.5, 12.5, 5, 12, 2, '#d6deec');
+        P(g, [7, 25, 7.8 + 1, 25 + fl, 9.5, 25], '#ff8a1e'); P(g, [7.6, 25, 8.4, 25 + fl * 0.55, 9, 25], '#fff3b0');
+        P(g, [10.4, 24.5, 11.6, 24.5 + fl * 0.9, 13, 24.5], '#ff8a1e'); P(g, [11, 24.5, 11.8, 24.5 + fl * 0.5, 12.4, 24.5], '#fff3b0');
+        L(g, [14, 15, 16, 15], '#7a8396', 1);
+        ball(g, 23, 25, 11, 3.6, '#d98c3a');
+        rbox(g, 12.4, 19.6, 21.6, 4.6, 2.2, '#6b3a1f'); R(g, 13.6, 20.4, 18, 0.8, '#8a5030');
+        P(g, [12.6, 19.4, 34, 19.4, 33, 21.8, 29.6, 20.2, 27, 23.2, 24.6, 20.2, 20, 22.6, 17.6, 20.2, 13.6, 21.8], '#ffcc2e');
+        g.fillStyle = '#5fcf5a'; g.beginPath(); g.moveTo(12, 18.8); for (let x = 12; x <= 34.5; x += 2.25) g.lineTo(x, 18.6 + ((x / 2.25) % 2 < 1 ? 1.6 : -0.2)); g.lineTo(34.5, 17.2); g.lineTo(12, 17.2); g.closePath(); g.fill();
+        R(g, 15, 16.2, 6, 1.6, '#ff4d4d'); R(g, 25, 16.2, 6, 1.6, '#ff4d4d');
+        ball(g, 23, 12.4, 11.4, 6.2, '#e8a24a', 0, true);
+        for (const [sx, sy] of [[17, 9], [21, 7.6], [26, 8], [29.5, 10], [19.5, 11.5], [24.5, 10.6]]) E(g, sx, sy, 0.9, 0.55, '#fff6e0', 0.4);
+        eye(g, 25.6, 12.4, 2, b); eye(g, 30.4, 12.6, 1.8, b);
+        L(g, [27, 15.4, 28.6, 16.2, 30.2, 15.4], '#1b1030', 0.7);
+        R(g, 18, 28, 1.3, 2.6, '#ffcc2e'); R(g, 27, 28, 1.3, 2.6, '#ffcc2e'); R(g, 16.8, 30, 3.2, 1.4, '#ff3b5c'); R(g, 25.8, 30, 3.2, 1.4, '#ff3b5c');
       } }
   ];
 
